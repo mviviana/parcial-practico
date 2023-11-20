@@ -39,7 +39,7 @@ let MemberService = class MemberService {
         return re.test(email);
     }
     async create(member) {
-        if (this.validateEmail(member.email)) {
+        if (!this.validateEmail(member.email)) {
             throw new business_exception_1.BusinessException(`El correo electronico proporcionado no es valido`, common_1.HttpStatus.PRECONDITION_FAILED);
         }
         return await this.memberRepository.save(member);
@@ -52,7 +52,7 @@ let MemberService = class MemberService {
         if (!persistedMember) {
             throw new business_exception_1.BusinessException(`El Socio con id ${id} no existe`, common_1.HttpStatus.NOT_FOUND);
         }
-        if (this.validateEmail(member.email)) {
+        if (!this.validateEmail(member.email)) {
             throw new business_exception_1.BusinessException(`El correo electronico proporcionado no es valido`, common_1.HttpStatus.PRECONDITION_FAILED);
         }
         return await this.memberRepository.save({

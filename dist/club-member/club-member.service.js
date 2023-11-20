@@ -29,9 +29,9 @@ let ClubMemberService = class ClubMemberService {
         if (!member) {
             throw new business_exception_1.BusinessException(`El socio con id ${memberId} no existe`, common_1.HttpStatus.NOT_FOUND);
         }
-        const club = await this.clubRepository.findOne({ where: { id: clubId } });
+        const club = await this.clubRepository.findOne({ where: { id: clubId }, relations: ['members'] });
         if (!club) {
-            throw new business_exception_1.BusinessException(`La tienda con id ${clubId} no existe`, common_1.HttpStatus.NOT_FOUND);
+            throw new business_exception_1.BusinessException(`El club con id ${clubId} no existe`, common_1.HttpStatus.NOT_FOUND);
         }
         club.members.push(member);
         return await this.clubRepository.save(club);
@@ -59,14 +59,14 @@ let ClubMemberService = class ClubMemberService {
         return memberClub;
     }
     async updateMembersFromClub(members, clubID) {
-        const club = await this.clubRepository.findOne({ where: { id: clubID }, relations: ["member"] });
+        const club = await this.clubRepository.findOne({ where: { id: clubID }, relations: ["members"] });
         if (!club) {
             throw new business_exception_1.BusinessException(`El club con id ${clubID} no existe`, common_1.HttpStatus.NOT_FOUND);
         }
         for (let i = 0; i < members.length; i++) {
             const member = await this.memberRepository.findOne({ where: { id: members[i].id } });
             if (!member) {
-                throw new business_exception_1.BusinessException(`El socio con id ${clubID[i].id} no existe`, common_1.HttpStatus.NOT_FOUND);
+                throw new business_exception_1.BusinessException(`El socio con id ${members[i].id} no existe`, common_1.HttpStatus.NOT_FOUND);
             }
             members[i] = member;
         }
